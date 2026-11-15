@@ -692,17 +692,9 @@ static irqreturn_t mms_ts_interrupt(int irq, void *dev_id)
 			continue;
 		}
 
-		input_mt_slot(info->input_dev, id);
-		input_mt_report_slot_state(info->input_dev,
-					   MT_TOOL_FINGER, true);
-		input_report_abs(info->input_dev, ABS_MT_WIDTH_MAJOR, tmp[4]);
-		input_report_abs(info->input_dev, ABS_MT_POSITION_X, x);
-		input_report_abs(info->input_dev, ABS_MT_POSITION_Y, y);
-		input_report_abs(info->input_dev, ABS_MT_TOUCH_MAJOR, tmp[6]);
-		input_report_abs(info->input_dev, ABS_MT_TOUCH_MINOR, tmp[7]);
-		input_report_abs(info->input_dev, ABS_MT_ANGLE, angle);
-		input_report_abs(info->input_dev, ABS_MT_PALM, palm);
-
+		info->mt[id].x = x; info->mt[id].y = y;
+		info->mt[id].w = tmp[4]; info->mt[id].major = tmp[6];
+		
 #if defined(SEC_TSP_DEBUG)
 		if (info->finger_state[id] == 0) {
 			info->finger_state[id] = 1;
