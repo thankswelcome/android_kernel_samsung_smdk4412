@@ -496,6 +496,7 @@ static void release_all_fingers(struct mms_ts_info *info)
 	}
 	input_mt_sync(info->input_dev);
 	input_sync(info->input_dev);
+	
 #if TOUCH_BOOSTER
 	set_dvfs_lock(info, 2);
 	pr_debug("[TSP] dvfs_lock free.\n ");
