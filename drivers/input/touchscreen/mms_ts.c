@@ -715,6 +715,14 @@ static irqreturn_t mms_ts_interrupt(int irq, void *dev_id)
 		}
 #endif
 	}
+
+for (i = 0; i < MAX_FINGERS; i++) { if (info->finger_state[i] != 1) continue;
+	input_report_abs(info->input_dev, ABS_MT_TRACKING_ID, i);
+	input_report_abs(info->input_dev, ABS_MT_POSITION_X, info->mt[i].x); input_report_abs(info->input_dev, ABS_MT_POSITION_Y, info->mt[i].y);
+	input_report_abs(info->input_dev, ABS_MT_TOUCH_MAJOR,info->mt[i].major ? info->mt[i].major : 1); input_report_abs(info->input_dev, ABS_MT_WIDTH_MAJOR, info->mt[i].w);
+	input_report_abs(info->input_dev, ABS_MT_PRESSURE, 50);
+	input_mt_sync(info->input_dev); }
+	input_mt_sync(info->input_dev);
 	input_sync(info->input_dev);
 	touch_is_pressed = 0;
 
@@ -2976,12 +2984,14 @@ static int __devinit mms_ts_probe(struct i2c_client *client,
 
 	__set_bit(EV_ABS, input_dev->evbit);
 	__set_bit(INPUT_PROP_DIRECT, input_dev->propbit);
-
-	input_mt_init_slots(input_dev, MAX_FINGERS);
+	input_set_abs_params(input_dev, ABS_MT_TRACKING_ID,
+		        0, MAX_FINGERS, 0, 0);
+	input_set_abs_params(input_dev, ABS_MT_PRESSURE,
+		        0, 255, 0, 0);
 	input_set_abs_params(input_dev, ABS_MT_WIDTH_MAJOR,
 				0, MAX_WIDTH, 0, 0);
 	input_set_abs_params(input_dev, ABS_MT_POSITION_X,
-			     0, (info->max_x)-1, 0, 0);
+			    0, (info->max_x)-1, 0, 0);
 	input_set_abs_params(input_dev, ABS_MT_POSITION_Y,
 				0, (info->max_y)-1, 0, 0);
 	input_set_abs_params(input_dev, ABS_MT_TOUCH_MAJOR,
