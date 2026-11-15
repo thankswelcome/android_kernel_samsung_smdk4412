@@ -255,6 +255,7 @@ struct mms_ts_info {
 	bool			ta_status;
 	bool			noise_mode;
 	unsigned char finger_state[MAX_FINGERS];
+    struct { int x, y, w, major; } mt[MAX_FINGERS];
 
 #if defined(SEC_TSP_FW_UPDATE)
 	u8 fw_update_state;
