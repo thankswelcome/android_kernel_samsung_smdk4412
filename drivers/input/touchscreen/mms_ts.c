@@ -493,10 +493,8 @@ static void release_all_fingers(struct mms_ts_info *info)
 			dev_notice(&client->dev, "finger %d up(force)\n", i);
 		}
 		info->finger_state[i] = 0;
-		input_mt_slot(info->input_dev, i);
-		input_mt_report_slot_state(info->input_dev, MT_TOOL_FINGER,
-					   false);
 	}
+	input_mt_sync(info->input_dev);
 	input_sync(info->input_dev);
 #if TOUCH_BOOSTER
 	set_dvfs_lock(info, 2);
